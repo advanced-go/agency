@@ -18,7 +18,7 @@ func run(c *controller) {
 		case <-tick:
 			status := core.StatusOK()
 			if !status.OK() && !status.NotFound() {
-				c.parent.Message(messaging.NewStatusMessage("", "", "", status))
+				c.handler.Message(messaging.NewStatusMessage("", "", "", status))
 			}
 		case msg, open := <-c.ctrlC:
 			if !open {
