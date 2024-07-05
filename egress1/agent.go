@@ -1,4 +1,4 @@
-package ingress1
+package egress1
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	Class = "ingress-controller1"
+	Class = "egress-controller1"
 )
 
 type controller struct {

@@ -1,4 +1,4 @@
-package ingress1
+package egress1
 
 import (
 	"github.com/advanced-go/stdlib/core"
@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// run - case officer run function.
+// run - controller run function.
 func run(c *controller) {
 	if c == nil {
 		return
