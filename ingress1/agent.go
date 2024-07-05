@@ -14,7 +14,7 @@ const (
 type ingressController struct {
 	running  bool
 	uri      string
-	interval time.Duration
+	interval time.Duration // Needs to be configured dynamically during runtime
 	ctrlC    chan *messaging.Message
 	parent   messaging.Agent
 	shutdown func()
@@ -28,10 +28,10 @@ func AgentUri(origin core.Origin) string {
 }
 
 // NewAgent - create a new case officer agent
-func NewAgent(origin core.Origin, interval time.Duration, parent messaging.Agent) messaging.Agent {
+func NewAgent(origin core.Origin, parent messaging.Agent) messaging.Agent {
 	c := new(ingressController)
 	c.uri = AgentUri(origin)
-	c.interval = interval
+	//c.interval = interval
 
 	c.ctrlC = make(chan *messaging.Message, messaging.ChannelSize)
 	c.parent = parent
