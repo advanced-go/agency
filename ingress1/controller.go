@@ -20,17 +20,17 @@ type controller struct {
 	shutdown func()
 }
 
-func AgentUri(origin core.Origin) string {
+func ControllerAgentUri(origin core.Origin) string {
 	if origin.SubZone == "" {
 		return fmt.Sprintf("%v:%v.%v.%v", Class, origin.Region, origin.Zone, origin.Host)
 	}
 	return fmt.Sprintf("%v:%v.%v.%v.%v", Class, origin.Region, origin.Zone, origin.SubZone, origin.Host)
 }
 
-// NewAgent - create a new case officer agent
-func NewAgent(origin core.Origin, handler messaging.Agent) messaging.Agent {
+// NewControllerAgent - create a new controller agent
+func NewControllerAgent(origin core.Origin, handler messaging.Agent) messaging.Agent {
 	c := new(controller)
-	c.uri = AgentUri(origin)
+	c.uri = ControllerAgentUri(origin)
 	//c.interval = interval
 
 	c.ctrlC = make(chan *messaging.Message, messaging.ChannelSize)

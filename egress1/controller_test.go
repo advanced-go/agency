@@ -5,7 +5,7 @@ import (
 	"github.com/advanced-go/stdlib/core"
 )
 
-func ExampleAgentUri() {
+func ExampleControllerAgentUri() {
 	origin := core.Origin{
 		Region:     "us-central1",
 		Zone:       "c",
@@ -13,13 +13,13 @@ func ExampleAgentUri() {
 		Host:       "host",
 		InstanceId: "",
 	}
-	u := AgentUri(origin)
+	u := ControllerAgentUri(origin)
 	fmt.Printf("test: AgentUri() -> [%v]\n", u)
 
 	origin.Region = "us-west1"
 	origin.Zone = "a"
 	origin.SubZone = ""
-	u = AgentUri(origin)
+	u = ControllerAgentUri(origin)
 	fmt.Printf("test: AgentUri() -> [%v]\n", u)
 
 	//Output:
