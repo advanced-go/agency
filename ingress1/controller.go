@@ -2,6 +2,8 @@ package ingress1
 
 import (
 	"fmt"
+	"github.com/advanced-go/observation/access1"
+	"github.com/advanced-go/observation/inference1"
 	"github.com/advanced-go/stdlib/core"
 	"github.com/advanced-go/stdlib/messaging"
 	"time"
@@ -14,7 +16,7 @@ const (
 type controller struct {
 	running  bool
 	uri      string
-	interval time.Duration // Needs to be configured dynamically during runtime
+	interval time.Duration // Needs to be configured dynamically during runtime, based on rps
 	ctrlC    chan *messaging.Message
 	handler  messaging.Agent
 	shutdown func()
@@ -31,8 +33,7 @@ func ControllerAgentUri(origin core.Origin) string {
 func NewControllerAgent(origin core.Origin, handler messaging.Agent) messaging.Agent {
 	c := new(controller)
 	c.uri = ControllerAgentUri(origin)
-	//c.interval = interval
-
+	c.interval = time.Second * 2
 	c.ctrlC = make(chan *messaging.Message, messaging.ChannelSize)
 	c.handler = handler
 	return c
@@ -54,10 +55,10 @@ func (c *controller) Message(m *messaging.Message) {
 }
 
 // Add - add a shutdown function
-func (c *controller) Add(f func()) {
-	c.shutdown = messaging.AddShutdown(c.shutdown, f)
-
-}
+//func (c *controller) Add(f func()) {
+//	c.shutdown = messaging.AddShutdown(c.shutdown, f)
+//
+//}
 
 // Shutdown - shutdown the agent
 func (c *controller) Shutdown() {
@@ -79,5 +80,5 @@ func (c *controller) Run() {
 	if c.running {
 		return
 	}
-	go run(c)
+	go run(c, access1.EgressQuery, inference1.EgressQuery, nil, inference1.Insert)
 }
