@@ -1,4 +1,4 @@
-package service
+package ops
 
 import (
 	"fmt"
@@ -14,14 +14,15 @@ type ops struct {
 	running      bool
 	agentId      string
 	emissary     *messaging.Channel
+	caseOfficers *messaging.Exchange
 	shutdownFunc func()
 }
 
-var Agent messaging.OpsAgent
+var opsAgent messaging.OpsAgent
 
 func init() {
-	Agent = NewAgent()
-	Agent.Run()
+	opsAgent = NewAgent()
+	opsAgent.Run()
 }
 
 // NewAgent - create a new ops agent
@@ -32,6 +33,7 @@ func NewAgent() messaging.OpsAgent {
 func newAgent() *ops {
 	r := new(ops)
 	r.agentId = Class
+	r.caseOfficers = messaging.NewExchange()
 	r.emissary = messaging.NewEnabledChannel()
 	return r
 }
@@ -67,7 +69,6 @@ func (o *ops) Run() {
 	if o.running {
 		return
 	}
-
 	go emissaryAttend(o)
 	o.running = true
 }
@@ -84,4 +85,9 @@ func (o *ops) Shutdown() {
 	msg := messaging.NewControlMessage(o.agentId, o.agentId, messaging.ShutdownEvent)
 	o.emissary.Enable()
 	o.emissary.C <- msg
+}
+
+func (o *ops) shutdown() {
+	o.emissary.Close()
+	o.caseOfficers.Shutdown()
 }
