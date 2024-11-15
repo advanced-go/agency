@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	PkgPath = "github/advanced-go/log/http"
+	PkgPath = "github/advanced-go/agency/http"
 	ver1    = "v1"
 	ver2    = "v2"
 
@@ -21,14 +21,6 @@ const (
 	versionPath         = "version"
 	authorityPath       = "authority"
 )
-
-/*
-var (
-	authorityResponse = NewAuthorityResponse(module.Authority)
-)
-
-
-*/
 
 // Exchange - HTTP exchange function
 func Exchange(r *http.Request) (*http.Response, *core.Status) {
