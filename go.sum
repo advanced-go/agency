@@ -1,11 +1,7 @@
-github.com/advanced-go/agents v0.0.0-20241115145355-ee16efd09e65 h1:1b2R1MMCXhUjU2+6etF3ZH711j1Q237aQ/JQ3hdoHoQ=
-github.com/advanced-go/agents v0.0.0-20241115145355-ee16efd09e65/go.mod h1:eilQdCR+24jrZg03HaZ5RcU7OtqSBo3cZyqu5L45C1Y=
 github.com/advanced-go/agents v0.0.0-20241116140903-42ea1cbb26a9 h1:NKQiSJdJi5xk24nHscMMPPexO6RhuIIyDXzdER1g/MI=
 github.com/advanced-go/agents v0.0.0-20241116140903-42ea1cbb26a9/go.mod h1:eilQdCR+24jrZg03HaZ5RcU7OtqSBo3cZyqu5L45C1Y=
 github.com/advanced-go/common v0.0.0-20241107192729-529f35719a51 h1:uLyeIn/HDGevlBe/GMWOmmH0wchNgm1oIOndDBIboLY=
 github.com/advanced-go/common v0.0.0-20241107192729-529f35719a51/go.mod h1:ZO9q9c1GB9gQOeuWiAk0fT7pH8nfmNarGHi/Qu4LP/Q=
-github.com/advanced-go/log v0.0.0-20241114210224-f5157780c204 h1:n4OFEy2bYrBZUAQa37x+rNr8lhh6oLtl1wpTFWZIj5o=
-github.com/advanced-go/log v0.0.0-20241114210224-f5157780c204/go.mod h1:5Xg63AfI0Qe4fdvgvcilsmyfPoqz2d6ygiNrrFGFYjM=
 github.com/advanced-go/log v0.0.0-20241116131819-5edd79a504a1 h1:d3AkR75C1KBrKKYbTvYC0IOZ1RnsytNbP7yuFj2r6ig=
 github.com/advanced-go/log v0.0.0-20241116131819-5edd79a504a1/go.mod h1:5Xg63AfI0Qe4fdvgvcilsmyfPoqz2d6ygiNrrFGFYjM=
 github.com/advanced-go/resiliency v0.0.0-20241115145047-908dc878f714 h1:NtVZUrU9WK+kc8IfPNdDCFtX+kkAA7SrLJ6jzO9Vhyk=

@@ -10,26 +10,26 @@ import (
 type initOfficer func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent
 
 // emissary attention
-func emissaryAttend(o *ops, agent initOfficer) {
+func emissaryAttend(agent *ops, initAgent initOfficer) {
 	for {
 		select {
-		case msg := <-o.emissary.C:
+		case msg := <-agent.emissary.C:
 			switch msg.Event() {
 			case messaging.ShutdownEvent:
-				o.shutdown()
+				agent.shutdown()
 				return
 			case messaging.DataChangeEvent:
 				if msg.IsContentType(guidance.ContentTypeCalendar) {
-					o.caseOfficers.Broadcast(msg)
+					agent.caseOfficers.Broadcast(msg)
 				}
 			case stopAgents:
-				o.caseOfficers.Shutdown()
+				agent.caseOfficers.Shutdown()
 			case startAgents:
-				if o.caseOfficers.Count() == 0 {
-					initialize(o, agent)
+				if agent.caseOfficers.Count() == 0 {
+					initialize(agent, initAgent)
 				}
 			default:
-				o.Handle(common.MessageEventErrorStatus(o.agentId, msg))
+				agent.Handle(common.MessageEventErrorStatus(agent.agentId, msg))
 			}
 		default:
 		}
@@ -39,6 +39,13 @@ func emissaryAttend(o *ops, agent initOfficer) {
 func initialize(o *ops, agent initOfficer) {
 	a := agent(westOrigin, o)
 	err := o.caseOfficers.Register(a)
+	if err != nil {
+		o.Handle(core.NewStatusError(core.StatusInvalidArgument, err))
+	} else {
+		a.Run()
+	}
+	a = agent(centralOrigin, o)
+	err = o.caseOfficers.Register(a)
 	if err != nil {
 		o.Handle(core.NewStatusError(core.StatusInvalidArgument, err))
 	} else {

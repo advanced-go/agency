@@ -28,10 +28,10 @@ func init() {
 
 // NewAgent - create a new ops agent
 func NewAgent() messaging.OpsAgent {
-	return newAgent()
+	return newOpsAgent()
 }
 
-func newAgent() *ops {
+func newOpsAgent() *ops {
 	r := new(ops)
 	r.agentId = Class
 	r.caseOfficers = messaging.NewExchange()
