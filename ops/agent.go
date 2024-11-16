@@ -70,7 +70,7 @@ func (o *ops) Run() {
 	if o.running {
 		return
 	}
-	go emissaryAttend(o, caseofficer1.NewAgent)
+	go emissaryAttend(o, caseofficer.NewAgent)
 	o.running = true
 }
 

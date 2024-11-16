@@ -7,10 +7,10 @@ import (
 	"github.com/advanced-go/resiliency/guidance"
 )
 
-type newOfficer func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent
+type initOfficer func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent
 
 // emissary attention
-func emissaryAttend(o *ops, newAgent newOfficer) {
+func emissaryAttend(o *ops, agent initOfficer) {
 	for {
 		select {
 		case msg := <-o.emissary.C:
@@ -26,12 +26,22 @@ func emissaryAttend(o *ops, newAgent newOfficer) {
 				o.caseOfficers.Shutdown()
 			case startAgents:
 				if o.caseOfficers.Count() == 0 {
-
+					initialize(o, agent)
 				}
 			default:
 				o.Handle(common.MessageEventErrorStatus(o.agentId, msg))
 			}
 		default:
 		}
+	}
+}
+
+func initialize(o *ops, agent initOfficer) {
+	a := agent(westOrigin, o)
+	err := o.caseOfficers.Register(a)
+	if err != nil {
+		o.Handle(core.NewStatusError(core.StatusInvalidArgument, err))
+	} else {
+		a.Run()
 	}
 }
