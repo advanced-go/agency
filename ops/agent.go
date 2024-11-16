@@ -88,7 +88,7 @@ func (o *ops) Shutdown() {
 	o.emissary.C <- msg
 }
 
-func (o *ops) shutdown() {
+func shutdown(o *ops) {
 	o.emissary.Close()
 	o.caseOfficers.Shutdown()
 }

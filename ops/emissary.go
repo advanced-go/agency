@@ -16,7 +16,7 @@ func emissaryAttend(agent *ops, initAgent initOfficer) {
 		case msg := <-agent.emissary.C:
 			switch msg.Event() {
 			case messaging.ShutdownEvent:
-				agent.shutdown()
+				shutdown(agent)
 				return
 			case messaging.DataChangeEvent:
 				if msg.IsContentType(guidance.ContentTypeCalendar) {
