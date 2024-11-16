@@ -10,13 +10,16 @@ import (
 type initOfficer func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent
 
 // emissary attention
-func emissaryAttend(agent *ops, initAgent initOfficer) {
+func emissaryAttend[T common.Notification](agent *ops, initAgent initOfficer) {
+	var notify T
+
 	for {
 		select {
 		case msg := <-agent.emissary.C:
 			switch msg.Event() {
 			case messaging.ShutdownEvent:
 				shutdown(agent)
+				notify.OnMessage(agent, msg)
 				return
 			case messaging.DataChangeEvent:
 				if msg.IsContentType(guidance.ContentTypeCalendar) {
