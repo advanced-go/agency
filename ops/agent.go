@@ -2,6 +2,7 @@ package ops
 
 import (
 	"fmt"
+	"github.com/advanced-go/agents/caseofficer"
 	"github.com/advanced-go/common/core"
 	"github.com/advanced-go/common/messaging"
 )
@@ -69,7 +70,7 @@ func (o *ops) Run() {
 	if o.running {
 		return
 	}
-	go emissaryAttend(o)
+	go emissaryAttend(o, caseofficer1.NewAgent)
 	o.running = true
 }
 
