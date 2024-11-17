@@ -19,6 +19,11 @@ type ops struct {
 	shutdownFunc func()
 }
 
+func cast(agent any) *ops {
+	o, _ := agent.(*ops)
+	return o
+}
+
 var opsAgent messaging.OpsAgent
 
 func init() {
@@ -35,7 +40,7 @@ func newOpsAgent(agentId string) *ops {
 	r := new(ops)
 	r.agentId = agentId
 	r.caseOfficers = messaging.NewExchange()
-	r.emissary = messaging.NewEnabledChannel()
+	r.emissary = messaging.NewEmissaryChannel(true)
 	return r
 }
 
@@ -70,7 +75,7 @@ func (o *ops) Run() {
 	if o.running {
 		return
 	}
-	go emissaryAttend(o, caseofficer.NewAgent)
+	go emissaryAttend[messaging.MutedNotifier](o, caseofficer.NewAgent)
 	o.running = true
 }
 

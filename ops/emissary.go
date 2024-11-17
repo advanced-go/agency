@@ -10,7 +10,7 @@ import (
 type initOfficer func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent
 
 // emissary attention
-func emissaryAttend[T common.Notification](agent *ops, initAgent initOfficer) {
+func emissaryAttend[T messaging.Notifier](agent *ops, initAgent initOfficer) {
 	var notify T
 
 	for {
@@ -19,38 +19,43 @@ func emissaryAttend[T common.Notification](agent *ops, initAgent initOfficer) {
 			switch msg.Event() {
 			case messaging.ShutdownEvent:
 				shutdown(agent)
-				notify.OnMessage(agent, msg)
+				notify.OnMessage(agent, msg, agent.emissary)
 				return
 			case messaging.DataChangeEvent:
 				if msg.IsContentType(guidance.ContentTypeCalendar) {
 					agent.caseOfficers.Broadcast(msg)
 				}
+				notify.OnMessage(agent, msg, agent.emissary)
 			case stopAgents:
 				agent.caseOfficers.Shutdown()
+				notify.OnMessage(agent, msg, agent.emissary)
 			case startAgents:
 				if agent.caseOfficers.Count() == 0 {
-					initialize(agent, initAgent)
+					initialize[T](agent, initAgent)
 				}
+				notify.OnMessage(agent, msg, agent.emissary)
 			default:
-				agent.Handle(common.MessageEventErrorStatus(agent.agentId, msg))
+				notify.OnError(agent, agent.Handle(common.MessageEventErrorStatus(agent.agentId, msg)))
 			}
 		default:
 		}
 	}
 }
 
-func initialize(o *ops, agent initOfficer) {
+func initialize[T messaging.Notifier](o *ops, agent initOfficer) {
+	var t T
+
 	a := agent(westOrigin, o)
 	err := o.caseOfficers.Register(a)
 	if err != nil {
-		o.Handle(core.NewStatusError(core.StatusInvalidArgument, err))
+		t.OnError(o, o.Handle(core.NewStatusError(core.StatusInvalidArgument, err)))
 	} else {
 		a.Run()
 	}
 	a = agent(centralOrigin, o)
 	err = o.caseOfficers.Register(a)
 	if err != nil {
-		o.Handle(core.NewStatusError(core.StatusInvalidArgument, err))
+		t.OnError(o, o.Handle(core.NewStatusError(core.StatusInvalidArgument, err)))
 	} else {
 		a.Run()
 	}
