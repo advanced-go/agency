@@ -4,22 +4,23 @@ import (
 	"errors"
 	"fmt"
 	"github.com/advanced-go/agency/module"
+	"github.com/advanced-go/agency/resiliency"
 	"github.com/advanced-go/common/core"
 	"github.com/advanced-go/common/httpx"
 	"github.com/advanced-go/common/uri"
 	"net/http"
 )
 
+// http://localhost:8085/github/advanced-go/agency:resiliency?action=send
+
 const (
 	PkgPath = "github/advanced-go/agency/http"
 	ver1    = "v1"
 	ver2    = "v2"
 
-	event               = "event"
+	resiliencyResource  = "resiliency"
 	healthLivenessPath  = "health/liveness"
 	healthReadinessPath = "health/readiness"
-	versionPath         = "version"
-	authorityPath       = "authority"
 )
 
 // Exchange - HTTP exchange function
@@ -39,14 +40,8 @@ func Exchange(r *http.Request) (*http.Response, *core.Status) {
 	}
 	core.AddRequestId(r.Header)
 	switch p.Resource {
-	case event:
-		return nil, nil
-	case versionPath:
-		//resp, status1 := NewVersionResponse(module.Version), core.StatusOK()
-		return nil, nil
-	case authorityPath:
-		//resp, status1 := authorityResponse, core.StatusOK()
-		return nil, nil
+	case resiliencyResource:
+		return resiliency.Post(r)
 	case healthReadinessPath, healthLivenessPath:
 		return httpx.NewHealthResponseOK(), core.StatusOK()
 	default:
