@@ -93,6 +93,10 @@ func (o *ops) Shutdown() {
 	o.emissary.C <- msg
 }
 
+func (o *ops) IsFinalized() bool {
+	return o.emissary.IsFinalized() && o.caseOfficers.IsFinalized()
+}
+
 func shutdown(o *ops) {
 	o.emissary.Close()
 	o.caseOfficers.Shutdown()
