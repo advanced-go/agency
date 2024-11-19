@@ -79,7 +79,7 @@ func ExampleEmissary_DataChange() {
 
 }
 
-func ExampleEmissary_Start() {
+func ExampleEmissary_Start_Error() {
 	ch := make(chan struct{})
 	agent := newOpsAgent(Class, test.DefaultTracer, messaging.OutputErrorNotifier, test.Dispatcher)
 
@@ -94,8 +94,10 @@ func ExampleEmissary_Start() {
 	close(ch)
 
 	//Output:
-	//OnTrace() -> agency-ops : officers.Broadcast()
-	//OnMsg()   -> agency-ops : event:data-change channel:EMISSARY
+	//{ "timestamp":"2024-11-19T21:36:19.968Z", "code":3, "status":"Invalid Argument", "request-id":null, "errors" : [ "error: init officer is nil" ], "trace" : [ "https://github.com/advanced-go/common/tree/main/messaging.(*outputError)#Notify","https://github.com/advanced-go/agency/tree/main/ops#initialize" ] }
+	//OnError() -> agency-ops : Invalid Argument [error: init officer is nil]
+	//OnTrace() -> agency-ops : initialize()
+	//OnMsg()   -> agency-ops : event:start-agents channel:EMISSARY
 	//OnMsg()   -> agency-ops : event:shutdown channel:EMISSARY
 
 }
