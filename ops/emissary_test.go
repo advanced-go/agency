@@ -58,6 +58,48 @@ func ExampleEmissary_Stop() {
 
 }
 
+func ExampleEmissary_DataChange() {
+	ch := make(chan struct{})
+	agent := newOpsAgent(Class, test.DefaultTracer, messaging.OutputErrorNotifier, test.Dispatcher)
+
+	go func() {
+		go emissaryAttend(agent, nil)
+		agent.Message(dataChangeMsg)
+		agent.Message(shutdownMsg)
+		agent.IsFinalized()
+		ch <- struct{}{}
+	}()
+	<-ch
+	close(ch)
+
+	//Output:
+	//OnTrace() -> agency-ops : officers.Broadcast()
+	//OnMsg()   -> agency-ops : event:data-change channel:EMISSARY
+	//OnMsg()   -> agency-ops : event:shutdown channel:EMISSARY
+
+}
+
+func ExampleEmissary_Start() {
+	ch := make(chan struct{})
+	agent := newOpsAgent(Class, test.DefaultTracer, messaging.OutputErrorNotifier, test.Dispatcher)
+
+	go func() {
+		go emissaryAttend(agent, nil)
+		agent.Message(startMsg)
+		agent.Message(shutdownMsg)
+		agent.IsFinalized()
+		ch <- struct{}{}
+	}()
+	<-ch
+	close(ch)
+
+	//Output:
+	//OnTrace() -> agency-ops : officers.Broadcast()
+	//OnMsg()   -> agency-ops : event:data-change channel:EMISSARY
+	//OnMsg()   -> agency-ops : event:shutdown channel:EMISSARY
+
+}
+
 func _ExampleEmissary_EventError() {
 	ch := make(chan struct{})
 	agent := newOpsAgent(Class, test.DefaultTracer, messaging.OutputErrorNotifier, test.Dispatcher)
