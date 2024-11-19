@@ -1,7 +1,6 @@
 package ops
 
 import (
-	"fmt"
 	"github.com/advanced-go/agents/caseofficer"
 	"github.com/advanced-go/common/core"
 	"github.com/advanced-go/common/messaging"
@@ -16,6 +15,9 @@ type ops struct {
 	agentId      string
 	emissary     *messaging.Channel
 	caseOfficers *messaging.Exchange
+	tracer       messaging.Tracer
+	notifier     messaging.Notifier
+	dispatcher   messaging.Dispatcher
 	shutdownFunc func()
 }
 
@@ -33,14 +35,17 @@ func init() {
 
 // NewAgent - create a new ops agent
 func NewAgent() messaging.OpsAgent {
-	return newOpsAgent(Class)
+	return newOpsAgent(Class, messaging.DefaultTracer, messaging.LogErrorNotifier, messaging.MutedDispatcher)
 }
 
-func newOpsAgent(agentId string) *ops {
+func newOpsAgent(agentId string, tracer messaging.Tracer, notifier messaging.Notifier, dispatcher messaging.Dispatcher) *ops {
 	r := new(ops)
 	r.agentId = agentId
 	r.caseOfficers = messaging.NewExchange()
 	r.emissary = messaging.NewEmissaryChannel(true)
+	r.tracer = tracer
+	r.notifier = notifier
+	r.dispatcher = dispatcher
 	return r
 }
 
@@ -50,14 +55,21 @@ func (o *ops) String() string { return o.Uri() }
 // Uri - agent identifier
 func (o *ops) Uri() string { return o.agentId }
 
-func (o *ops) Handle(status *core.Status) *core.Status {
-	var e core.Output
-	return e.Handle(status)
+// Trace - agent activity tracing
+func (o *ops) Trace(agent messaging.Agent, activity any) {
+	o.tracer.Trace(agent, activity)
 }
 
-func (o *ops) AddActivity(agentId string, content any) {
-	fmt.Printf("%v : %v", agentId, content)
+// Notify - status notifier
+func (o *ops) Notify(status *core.Status) *core.Status {
+	return o.notifier.Notify(status)
 }
+
+func (o *ops) OnTick(agent any, src *messaging.Ticker) { o.dispatcher.OnTick(agent, src) }
+func (o *ops) OnMessage(agent any, msg *messaging.Message, src *messaging.Channel) {
+	o.dispatcher.OnMessage(agent, msg, src)
+}
+func (o *ops) OnError(agent any, status *core.Status) *core.Status { return o.OnError(agent, status) }
 
 // Message - message the agent
 func (o *ops) Message(m *messaging.Message) {
@@ -75,7 +87,7 @@ func (o *ops) Run() {
 	if o.running {
 		return
 	}
-	go emissaryAttend[messaging.MutedNotifier](o, caseofficer.NewAgent)
+	go emissaryAttend(o, caseofficer.NewAgent)
 	o.running = true
 }
 
@@ -97,7 +109,7 @@ func (o *ops) IsFinalized() bool {
 	return o.emissary.IsFinalized() && o.caseOfficers.IsFinalized()
 }
 
-func shutdown(o *ops) {
+func (o *ops) finalize() {
 	o.emissary.Close()
 	o.caseOfficers.Shutdown()
 }

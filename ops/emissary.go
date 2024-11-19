@@ -1,6 +1,7 @@
 package ops
 
 import (
+	"errors"
 	"github.com/advanced-go/agency/common"
 	"github.com/advanced-go/common/core"
 	"github.com/advanced-go/common/messaging"
@@ -10,52 +11,56 @@ import (
 type initOfficer func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent
 
 // emissary attention
-func emissaryAttend[T messaging.Notifier](agent *ops, initAgent initOfficer) {
-	var notify T
+func emissaryAttend(agent *ops, initAgent initOfficer) {
 
 	for {
 		select {
 		case msg := <-agent.emissary.C:
 			switch msg.Event() {
 			case messaging.ShutdownEvent:
-				shutdown(agent)
-				notify.OnMessage(agent, msg, agent.emissary)
+				agent.finalize()
+				agent.OnMessage(agent, msg, agent.emissary)
 				return
 			case messaging.DataChangeEvent:
 				if msg.IsContentType(guidance.ContentTypeCalendar) {
 					agent.caseOfficers.Broadcast(msg)
+					agent.Trace(agent, "officers.Broadcast()")
 				}
-				notify.OnMessage(agent, msg, agent.emissary)
+				agent.OnMessage(agent, msg, agent.emissary)
 			case stopAgents:
 				agent.caseOfficers.Shutdown()
-				notify.OnMessage(agent, msg, agent.emissary)
+				agent.Trace(agent, "officers.Shutdown()")
+				agent.OnMessage(agent, msg, agent.emissary)
 			case startAgents:
 				if agent.caseOfficers.Count() == 0 {
-					initialize[T](agent, initAgent)
+					initialize(agent, initAgent)
+					agent.Trace(agent, "initialize()")
 				}
-				notify.OnMessage(agent, msg, agent.emissary)
+				agent.OnMessage(agent, msg, agent.emissary)
 			default:
-				notify.OnError(agent, agent.Handle(common.MessageEventErrorStatus(agent.agentId, msg)))
+				agent.OnError(agent, agent.Notify(common.MessageEventErrorStatus(agent.agentId, msg)))
 			}
 		default:
 		}
 	}
 }
 
-func initialize[T messaging.Notifier](o *ops, agent initOfficer) {
-	var t T
-
-	a := agent(westOrigin, o)
-	err := o.caseOfficers.Register(a)
+func initialize(agent *ops, officer initOfficer) {
+	if officer == nil {
+		agent.OnError(agent, agent.Notify(core.NewStatusError(core.StatusInvalidArgument, errors.New("error: init officer is nil"))))
+		return
+	}
+	a := officer(westOrigin, agent)
+	err := agent.caseOfficers.Register(a)
 	if err != nil {
-		t.OnError(o, o.Handle(core.NewStatusError(core.StatusInvalidArgument, err)))
+		agent.OnError(agent, agent.Notify(core.NewStatusError(core.StatusInvalidArgument, err)))
 	} else {
 		a.Run()
 	}
-	a = agent(centralOrigin, o)
-	err = o.caseOfficers.Register(a)
+	a = officer(centralOrigin, agent)
+	err = agent.caseOfficers.Register(a)
 	if err != nil {
-		t.OnError(o, o.Handle(core.NewStatusError(core.StatusInvalidArgument, err)))
+		agent.OnError(agent, agent.Notify(core.NewStatusError(core.StatusInvalidArgument, err)))
 	} else {
 		a.Run()
 	}
