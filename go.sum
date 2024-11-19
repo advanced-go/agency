@@ -12,6 +12,12 @@ github.com/advanced-go/common v0.0.0-20241119202631-9652e9704862 h1:X/Z1Ze/jN9ZJ
 github.com/advanced-go/common v0.0.0-20241119202631-9652e9704862/go.mod h1:ZO9q9c1GB9gQOeuWiAk0fT7pH8nfmNarGHi/Qu4LP/Q=
 github.com/advanced-go/common v0.0.0-20241119205603-c7a9d0878c79 h1:pFcrw0N8JCki3oqicsMi9aj24+ZuuSHwE/Rdao7QljQ=
 github.com/advanced-go/common v0.0.0-20241119205603-c7a9d0878c79/go.mod h1:ZO9q9c1GB9gQOeuWiAk0fT7pH8nfmNarGHi/Qu4LP/Q=
+github.com/advanced-go/common v0.0.0-20241119210755-bf52330656be h1:6hwgwJKr2+7fLAibP7zmVO2mPYWUEv02Xpfvrg9iMjk=
+github.com/advanced-go/common v0.0.0-20241119210755-bf52330656be/go.mod h1:ZO9q9c1GB9gQOeuWiAk0fT7pH8nfmNarGHi/Qu4LP/Q=
+github.com/advanced-go/common v0.0.0-20241119211017-2360fca83047 h1:lpfydRAYueuys9ejuc+kco60bqgI2sazLq+xBe8tdbY=
+github.com/advanced-go/common v0.0.0-20241119211017-2360fca83047/go.mod h1:ZO9q9c1GB9gQOeuWiAk0fT7pH8nfmNarGHi/Qu4LP/Q=
+github.com/advanced-go/common v0.0.0-20241119212033-18a87bec29b4 h1:ajJ4Yg8IbvEJpN41qei1LNi0Imo4lqRV66GTIlAAH+c=
+github.com/advanced-go/common v0.0.0-20241119212033-18a87bec29b4/go.mod h1:ZO9q9c1GB9gQOeuWiAk0fT7pH8nfmNarGHi/Qu4LP/Q=
 github.com/advanced-go/log v0.0.0-20241116131819-5edd79a504a1 h1:d3AkR75C1KBrKKYbTvYC0IOZ1RnsytNbP7yuFj2r6ig=
 github.com/advanced-go/log v0.0.0-20241116131819-5edd79a504a1/go.mod h1:5Xg63AfI0Qe4fdvgvcilsmyfPoqz2d6ygiNrrFGFYjM=
 github.com/advanced-go/resiliency v0.0.0-20241119124808-330fba87df4c h1:AWoI7Ld9/+lsfe6R9jf5JU1946P1jzgSJU1c1TAK5Wo=

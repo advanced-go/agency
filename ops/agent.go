@@ -69,7 +69,9 @@ func (o *ops) OnTick(agent any, src *messaging.Ticker) { o.dispatcher.OnTick(age
 func (o *ops) OnMessage(agent any, msg *messaging.Message, src *messaging.Channel) {
 	o.dispatcher.OnMessage(agent, msg, src)
 }
-func (o *ops) OnError(agent any, status *core.Status) *core.Status { return o.OnError(agent, status) }
+func (o *ops) OnError(agent any, status *core.Status) *core.Status {
+	return o.dispatcher.OnError(agent, status)
+}
 
 // Message - message the agent
 func (o *ops) Message(m *messaging.Message) {
