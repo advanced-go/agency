@@ -102,6 +102,29 @@ func ExampleEmissary_Start_Error() {
 
 }
 
+func ExampleEmissary_Start() {
+	ch := make(chan struct{})
+	agent := newOpsAgent(Class, test.DefaultTracer, messaging.OutputErrorNotifier, test.Dispatcher)
+
+	go func() {
+		go emissaryAttend(agent, nil)
+		agent.Message(startMsg)
+		agent.Message(shutdownMsg)
+		agent.IsFinalized()
+		ch <- struct{}{}
+	}()
+	<-ch
+	close(ch)
+
+	//Output:
+	//{ "timestamp":"2024-11-19T21:36:19.968Z", "code":3, "status":"Invalid Argument", "request-id":null, "errors" : [ "error: init officer is nil" ], "trace" : [ "https://github.com/advanced-go/common/tree/main/messaging.(*outputError)#Notify","https://github.com/advanced-go/agency/tree/main/ops#initialize" ] }
+	//OnError() -> agency-ops : Invalid Argument [error: init officer is nil]
+	//OnTrace() -> agency-ops : initialize()
+	//OnMsg()   -> agency-ops : event:start-agents channel:EMISSARY
+	//OnMsg()   -> agency-ops : event:shutdown channel:EMISSARY
+
+}
+
 func _ExampleEmissary_EventError() {
 	ch := make(chan struct{})
 	agent := newOpsAgent(Class, test.DefaultTracer, messaging.OutputErrorNotifier, test.Dispatcher)
