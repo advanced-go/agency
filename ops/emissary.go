@@ -16,29 +16,26 @@ func emissaryAttend(agent *ops, initAgent initOfficer) {
 	for {
 		select {
 		case msg := <-agent.emissary.C:
+			agent.OnMessage(agent, msg, agent.emissary)
 			switch msg.Event() {
 			case messaging.ShutdownEvent:
 				agent.finalize()
-				agent.OnMessage(agent, msg, agent.emissary)
 				return
 			case messaging.DataChangeEvent:
 				if msg.IsContentType(guidance.ContentTypeCalendar) {
 					agent.caseOfficers.Broadcast(msg)
-					agent.Trace(agent, "officers.Broadcast()")
+					agent.OnTrace(agent, "officers.Broadcast()")
 				}
-				agent.OnMessage(agent, msg, agent.emissary)
 			case stopAgents:
 				agent.caseOfficers.Shutdown()
-				agent.Trace(agent, "officers.Shutdown()")
-				agent.OnMessage(agent, msg, agent.emissary)
+				agent.OnTrace(agent, "officers.Shutdown()")
 			case startAgents:
 				if agent.caseOfficers.Count() == 0 {
 					initialize(agent, initAgent)
-					agent.Trace(agent, "initialize()")
+					agent.OnTrace(agent, "initialize()")
 				}
-				agent.OnMessage(agent, msg, agent.emissary)
 			default:
-				agent.OnError(agent, agent.Notify(common.MessageEventErrorStatus(agent.agentId, msg)))
+				agent.Notify(common.MessageEventErrorStatus(agent.agentId, msg))
 			}
 		default:
 		}
@@ -47,20 +44,20 @@ func emissaryAttend(agent *ops, initAgent initOfficer) {
 
 func initialize(agent *ops, officer initOfficer) {
 	if officer == nil {
-		agent.OnError(agent, agent.Notify(core.NewStatusError(core.StatusInvalidArgument, errors.New("error: init officer is nil"))))
+		agent.Notify(core.NewStatusError(core.StatusInvalidArgument, errors.New("error: init officer is nil")))
 		return
 	}
 	a := officer(westOrigin, agent)
 	err := agent.caseOfficers.Register(a)
 	if err != nil {
-		agent.OnError(agent, agent.Notify(core.NewStatusError(core.StatusInvalidArgument, err)))
+		agent.Notify(core.NewStatusError(core.StatusInvalidArgument, err))
 	} else {
 		a.Run()
 	}
 	a = officer(centralOrigin, agent)
 	err = agent.caseOfficers.Register(a)
 	if err != nil {
-		agent.OnError(agent, agent.Notify(core.NewStatusError(core.StatusInvalidArgument, err)))
+		agent.Notify(core.NewStatusError(core.StatusInvalidArgument, err))
 	} else {
 		a.Run()
 	}
