@@ -17,12 +17,12 @@ var (
 )
 
 func StartAgents() {
-	opsAgent.Message(messaging.NewControlMessage(opsAgent.Uri(), opsAgent.Uri(), startAgents))
+	opsAgent.Message(messaging.NewControlMessage(opsAgent.Uri(), opsAgent.Uri(), startAgentsEvent))
 	timeseries.Reset()
 }
 
 func StopAgents() {
-	opsAgent.Message(messaging.NewControlMessage(opsAgent.Uri(), opsAgent.Uri(), stopAgents))
+	opsAgent.Message(messaging.NewControlMessage(opsAgent.Uri(), opsAgent.Uri(), stopAgentsEvent))
 }
 
 func SendCalendar() {

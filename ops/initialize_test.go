@@ -9,7 +9,7 @@ import (
 
 func ExampleInitialize_Error() {
 	notifier := test.NewNotifier()
-	agent := newOpsAgent(Class, notifier, test.DefaultTracer)
+	agent := newOpsAgent(Class, notifier, test.DefaultTracer, nil)
 
 	initialize(agent, nil)
 	fmt.Printf("test: initialize() -> [status:%v]\n", notifier.Status())
