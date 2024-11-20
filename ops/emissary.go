@@ -34,7 +34,7 @@ func emissaryAttend(agent *ops, initAgent initOfficer) {
 					agent.OnTrace(agent, "initialize()")
 				}
 			default:
-				agent.Notify(agent, common.MessageEventErrorStatus(agent.agentId, msg))
+				agent.Notify(common.MessageEventErrorStatus(agent.agentId, msg))
 			}
 		default:
 		}

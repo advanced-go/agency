@@ -7,29 +7,20 @@ import (
 	"github.com/advanced-go/common/test"
 )
 
-type statusT struct {
-	status *core.Status
-}
-
-func (s *statusT) Notify(agent any, status *core.Status) *core.Status {
-	s.status = status
-	return status
-}
-
 func ExampleInitialize_Error() {
-	notifier := new(statusT)
+	notifier := test.NewNotifier()
 	agent := newOpsAgent(Class, notifier, test.Dispatcher)
 
 	initialize(agent, nil)
-	fmt.Printf("test: initialize() -> [status:%v]\n", notifier.status)
+	fmt.Printf("test: initialize() -> [status:%v]\n", notifier.Status())
 
-	notifier.status = nil
+	notifier.Reset()
 	initialize(agent, func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent {
 		return test.NewAgent("", nil)
 	})
-	fmt.Printf("test: initialize() -> [status:%v]\n", notifier.status)
+	fmt.Printf("test: initialize() -> [status:%v]\n", notifier.Status())
 
-	notifier.status = nil
+	notifier.Reset()
 	a := test.NewAgent("agent:test", nil)
 	err := agent.caseOfficers.Register(a)
 	if err != nil {
@@ -38,11 +29,11 @@ func ExampleInitialize_Error() {
 	initialize(agent, func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent {
 		return a
 	})
-	fmt.Printf("test: initialize() -> [status:%v]\n", notifier.status)
+	fmt.Printf("test: initialize() -> [status:%v]\n", notifier.Status())
 
 	//Output:
 	//test: initialize() -> [status:Invalid Argument [error: init officer is nil]]
-	//test: initialize() -> [status:Invalid Argument [error: exchange.Register() agent Uri is nil]]
+	//test: initialize() -> [status:Invalid Argument [error: exchange.Register() agent Uri is empty]]
 	//test: initialize() -> [status:Invalid Argument [error: exchange.Register() agent already exists: [agent:test]]]
 
 }
