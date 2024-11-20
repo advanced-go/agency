@@ -1,6 +1,9 @@
 package ops
 
-import "github.com/advanced-go/common/messaging"
+import (
+	"fmt"
+	"github.com/advanced-go/common/messaging"
+)
 
 type dispatchT struct{}
 
@@ -9,13 +12,15 @@ func newTestDispatcher() dispatcher {
 	return d
 }
 
-func (d *dispatchT) dispatch(ops messaging.OpsAgent, agent messaging.Agent, event string) {
+func (d *dispatchT) dispatch(agent *ops, event string) {
 	switch event {
 	case stopAgentsEvent:
-		//opsAgent.Trace(agent, event, "stopping case officer agents")
+		finalized := agent.caseOfficers.IsFinalized()
+		fmt.Printf("test: dispatch(%v) -> [finalized:%v] [count:%v]\n", event, finalized, agent.caseOfficers.Count())
 	case startAgentsEvent:
-		//opsAgent.Trace(agent, event, "starting case officer agents")
+		finalized := agent.caseOfficers.IsFinalized()
+		fmt.Printf("test: dispatch(%v) -> [finalized:%v] [count>0:%v\n", event, finalized, agent.caseOfficers.Count() > 0)
 	case messaging.DataChangeEvent:
-		opsAgent.Trace(agent, event, "data change Broadcast()")
+		opsAgent.Trace(agent, event, "Broadcast() -> calendar data change event")
 	}
 }

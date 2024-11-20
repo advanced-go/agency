@@ -11,18 +11,16 @@ const (
 )
 
 type ops struct {
-	running      bool
-	agentId      string
+	running bool
+	agentId string
+
 	emissary     *messaging.Channel
 	caseOfficers *messaging.Exchange
 	notifier     messaging.Notifier
 	tracer       messaging.Tracer
-	shutdownFunc func()
 
-	sender dispatcher
-	//age       func(msg *messaging.Message, src *messaging.Channel)
-	//preStateChange  func()
-	//postStateChange func()
+	sender       dispatcher
+	shutdownFunc func()
 }
 
 func cast(agent any) *ops {
@@ -49,11 +47,7 @@ func newOpsAgent(agentId string, notifier messaging.Notifier, tracer messaging.T
 	r.emissary = messaging.NewEmissaryChannel(true)
 	r.notifier = notifier
 	r.tracer = tracer
-
 	r.sender = sender
-	//r.onMessage = func(msg *messaging.Message, src *messaging.Channel) {}
-	//r.preStateChange = func() {}
-	//r.postStateChange = func() {}
 	return r
 }
 
@@ -64,9 +58,7 @@ func (o *ops) String() string { return o.Uri() }
 func (o *ops) Uri() string { return o.agentId }
 
 // Notify - status notifier
-func (o *ops) Notify(status *core.Status) *core.Status {
-	return o.notifier.Notify(status)
-}
+func (o *ops) Notify(status *core.Status) *core.Status { return o.notifier.Notify(status) }
 
 // Trace - activity tracing
 func (o *ops) Trace(agent messaging.Agent, event, activity string) {
@@ -102,7 +94,7 @@ func (o *ops) Shutdown() {
 	if o.shutdownFunc != nil {
 		o.shutdownFunc()
 	}
-	msg := messaging.NewControlMessage(o.agentId, o.agentId, messaging.ShutdownEvent)
+	msg := messaging.NewControlMessage(o.Uri(), o.Uri(), messaging.ShutdownEvent)
 	o.emissary.Enable()
 	o.emissary.C <- msg
 }
@@ -117,5 +109,5 @@ func (o *ops) finalize() {
 }
 
 func (o *ops) dispatch(event string) {
-	o.sender.dispatch(o, o, event)
+	o.sender.dispatch(o, event)
 }

@@ -1,9 +1,7 @@
 package ops
 
-import "github.com/advanced-go/common/messaging"
-
 type dispatcher interface {
-	dispatch(ops messaging.OpsAgent, agent messaging.Agent, event string)
+	dispatch(agent *ops, event string)
 }
 
 type dispatch struct{}
@@ -13,11 +11,11 @@ func newDispatcher() dispatcher {
 	return d
 }
 
-func (d *dispatch) dispatch(ops messaging.OpsAgent, agent messaging.Agent, event string) {
+func (d *dispatch) dispatch(agent *ops, event string) {
 	switch event {
 	case stopAgentsEvent:
-		opsAgent.Trace(agent, event, "stopping case officer agents")
+		agent.Trace(agent, event, "stopping case officer agents")
 	case startAgentsEvent:
-		opsAgent.Trace(agent, event, "starting case officer agents")
+		agent.Trace(agent, event, "starting case officer agents")
 	}
 }
