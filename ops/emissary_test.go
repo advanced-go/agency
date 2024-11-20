@@ -20,7 +20,7 @@ func init() {
 
 func ExampleEmissary_Shutdown() {
 	ch := make(chan struct{})
-	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.Dispatcher)
+	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer)
 
 	go func() {
 		go emissaryAttend(agent, nil)
@@ -39,7 +39,7 @@ func ExampleEmissary_Shutdown() {
 
 func ExampleEmissary_Stop() {
 	ch := make(chan struct{})
-	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.Dispatcher)
+	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer)
 
 	go func() {
 		go emissaryAttend(agent, nil)
@@ -60,7 +60,7 @@ func ExampleEmissary_Stop() {
 
 func ExampleEmissary_DataChange() {
 	ch := make(chan struct{})
-	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.Dispatcher)
+	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer)
 
 	go func() {
 		go emissaryAttend(agent, nil)
@@ -81,7 +81,7 @@ func ExampleEmissary_DataChange() {
 
 func ExampleEmissary_Start_Error() {
 	ch := make(chan struct{})
-	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.Dispatcher)
+	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer)
 
 	go func() {
 		go emissaryAttend(agent, nil)
@@ -103,7 +103,7 @@ func ExampleEmissary_Start_Error() {
 
 func ExampleEmissary_Start() {
 	ch := make(chan struct{})
-	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.Dispatcher)
+	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer)
 
 	go func() {
 		go emissaryAttend(agent, nil)

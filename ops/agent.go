@@ -16,8 +16,13 @@ type ops struct {
 	emissary     *messaging.Channel
 	caseOfficers *messaging.Exchange
 	notifier     messaging.Notifier
-	dispatcher   messaging.Dispatcher
+	tracer       messaging.Tracer
 	shutdownFunc func()
+
+	// testing/debugging
+	onMessage       func(msg *messaging.Message, src *messaging.Channel)
+	preStateChange  func()
+	postStateChange func()
 }
 
 func cast(agent any) *ops {
@@ -34,16 +39,20 @@ func init() {
 
 // NewAgent - create a new ops agent
 func NewAgent() messaging.OpsAgent {
-	return newOpsAgent(Class, messaging.LogErrorNotifier, messaging.MutedDispatcher)
+	return newOpsAgent(Class, messaging.LogErrorNotifier, messaging.DefaultTracer)
 }
 
-func newOpsAgent(agentId string, notifier messaging.Notifier, dispatcher messaging.Dispatcher) *ops {
+func newOpsAgent(agentId string, notifier messaging.Notifier, tracer messaging.Tracer) *ops {
 	r := new(ops)
 	r.agentId = agentId
 	r.caseOfficers = messaging.NewExchange()
 	r.emissary = messaging.NewEmissaryChannel(true)
 	r.notifier = notifier
-	r.dispatcher = dispatcher
+	r.tracer = tracer
+
+	r.onMessage = func(msg *messaging.Message, src *messaging.Channel) {}
+	r.preStateChange = func() {}
+	r.postStateChange = func() {}
 	return r
 }
 
@@ -58,11 +67,18 @@ func (o *ops) Notify(status *core.Status) *core.Status {
 	return o.notifier.Notify(status)
 }
 
-func (o *ops) OnTick(agent any, src *messaging.Ticker) { o.dispatcher.OnTick(agent, src) }
-func (o *ops) OnMessage(agent any, msg *messaging.Message, src *messaging.Channel) {
-	o.dispatcher.OnMessage(agent, msg, src)
+// Trace - activity tracing
+func (o *ops) Trace(agent any, activity any) {
+	o.tracer.Trace(agent, activity)
 }
-func (o *ops) OnTrace(agent any, activity any) { o.dispatcher.OnTrace(agent, activity) }
+
+//func (o *ops) OnTick(agent any, src *messaging.Ticker) { o.dispatcher.OnTick(agent, src) }
+
+//func (o *ops) OnMessage(agent any, msg *messaging.Message, src *messaging.Channel) {
+//	o.dispatcher.OnMessage(agent, msg, src)
+//}
+
+//func (o *ops) OnTrace(agent any, activity any) { o.dispatcher.OnTrace(agent, activity) }
 
 // Message - message the agent
 func (o *ops) Message(m *messaging.Message) {
