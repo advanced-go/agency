@@ -10,8 +10,8 @@ import (
 var (
 	shutdownMsg   = messaging.NewControlMessage("", "", messaging.ShutdownEvent)
 	dataChangeMsg = messaging.NewControlMessage("", "", messaging.DataChangeEvent)
-	startMsg      = messaging.NewControlMessage("", "", startAgents)
-	stopMsg       = messaging.NewControlMessage("", "", stopAgents)
+	startMsg      = messaging.NewControlMessage("", "", startAgentsEvent)
+	stopMsg       = messaging.NewControlMessage("", "", stopAgentsEvent)
 )
 
 func init() {
@@ -20,7 +20,7 @@ func init() {
 
 func ExampleEmissary_Shutdown() {
 	ch := make(chan struct{})
-	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer)
+	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer, newTestDispatcher())
 
 	go func() {
 		go emissaryAttend(agent, nil)
@@ -39,7 +39,7 @@ func ExampleEmissary_Shutdown() {
 
 func ExampleEmissary_Stop() {
 	ch := make(chan struct{})
-	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer)
+	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer, newTestDispatcher())
 
 	go func() {
 		go emissaryAttend(agent, nil)
@@ -60,7 +60,7 @@ func ExampleEmissary_Stop() {
 
 func ExampleEmissary_DataChange() {
 	ch := make(chan struct{})
-	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer)
+	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer, newTestDispatcher())
 
 	go func() {
 		go emissaryAttend(agent, nil)
@@ -81,7 +81,7 @@ func ExampleEmissary_DataChange() {
 
 func ExampleEmissary_Start_Error() {
 	ch := make(chan struct{})
-	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer)
+	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer, newTestDispatcher())
 
 	go func() {
 		go emissaryAttend(agent, nil)
@@ -103,7 +103,7 @@ func ExampleEmissary_Start_Error() {
 
 func ExampleEmissary_Start() {
 	ch := make(chan struct{})
-	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer)
+	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer, newTestDispatcher())
 
 	go func() {
 		go emissaryAttend(agent, nil)

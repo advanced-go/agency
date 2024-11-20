@@ -1,6 +1,6 @@
 package ops
 
 const (
-	startAgents = "event:start-agents"
-	stopAgents  = "event:stop-agents"
+	startAgentsEvent = "event:start-agents"
+	stopAgentsEvent  = "event:stop-agents"
 )
