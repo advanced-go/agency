@@ -54,8 +54,8 @@ func (o *ops) String() string { return o.Uri() }
 func (o *ops) Uri() string { return o.agentId }
 
 // Notify - status notifier
-func (o *ops) Notify(status *core.Status) *core.Status {
-	return o.notifier.Notify(status)
+func (o *ops) Notify(agent any, status *core.Status) *core.Status {
+	return o.notifier.Notify(agent, status)
 }
 
 func (o *ops) OnTick(agent any, src *messaging.Ticker) { o.dispatcher.OnTick(agent, src) }

@@ -20,7 +20,7 @@ func init() {
 
 func ExampleEmissary_Shutdown() {
 	ch := make(chan struct{})
-	agent := newOpsAgent(Class, test.DefaultTracer, messaging.OutputErrorNotifier, test.Dispatcher)
+	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.Dispatcher)
 
 	go func() {
 		go emissaryAttend(agent, nil)
@@ -39,7 +39,7 @@ func ExampleEmissary_Shutdown() {
 
 func ExampleEmissary_Stop() {
 	ch := make(chan struct{})
-	agent := newOpsAgent(Class, test.DefaultTracer, messaging.OutputErrorNotifier, test.Dispatcher)
+	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.Dispatcher)
 
 	go func() {
 		go emissaryAttend(agent, nil)
@@ -52,15 +52,15 @@ func ExampleEmissary_Stop() {
 	close(ch)
 
 	//Output:
-	//OnTrace() -> agency-ops : officers.Shutdown()
 	//OnMsg()   -> agency-ops : event:stop-agents channel:EMISSARY
+	//OnTrace() -> agency-ops : officers.Shutdown()
 	//OnMsg()   -> agency-ops : event:shutdown channel:EMISSARY
 
 }
 
 func ExampleEmissary_DataChange() {
 	ch := make(chan struct{})
-	agent := newOpsAgent(Class, test.DefaultTracer, messaging.OutputErrorNotifier, test.Dispatcher)
+	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.Dispatcher)
 
 	go func() {
 		go emissaryAttend(agent, nil)
@@ -73,15 +73,15 @@ func ExampleEmissary_DataChange() {
 	close(ch)
 
 	//Output:
-	//OnTrace() -> agency-ops : officers.Broadcast()
 	//OnMsg()   -> agency-ops : event:data-change channel:EMISSARY
+	//OnTrace() -> agency-ops : officers.Broadcast()
 	//OnMsg()   -> agency-ops : event:shutdown channel:EMISSARY
 
 }
 
 func ExampleEmissary_Start_Error() {
 	ch := make(chan struct{})
-	agent := newOpsAgent(Class, test.DefaultTracer, messaging.OutputErrorNotifier, test.Dispatcher)
+	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.Dispatcher)
 
 	go func() {
 		go emissaryAttend(agent, nil)
@@ -94,17 +94,16 @@ func ExampleEmissary_Start_Error() {
 	close(ch)
 
 	//Output:
-	//{ "timestamp":"2024-11-19T21:36:19.968Z", "code":3, "status":"Invalid Argument", "request-id":null, "errors" : [ "error: init officer is nil" ], "trace" : [ "https://github.com/advanced-go/common/tree/main/messaging.(*outputError)#Notify","https://github.com/advanced-go/agency/tree/main/ops#initialize" ] }
-	//OnError() -> agency-ops : Invalid Argument [error: init officer is nil]
-	//OnTrace() -> agency-ops : initialize()
 	//OnMsg()   -> agency-ops : event:start-agents channel:EMISSARY
+	//{ "timestamp":"2024-11-19T21:36:19.968Z", "code":3, "status":"Invalid Argument", "request-id":null, "errors" : [ "error: init officer is nil" ], "trace" : [ "https://github.com/advanced-go/common/tree/main/messaging.(*outputError)#Notify","https://github.com/advanced-go/agency/tree/main/ops#initialize" ] }
+	//OnTrace() -> agency-ops : initialize()
 	//OnMsg()   -> agency-ops : event:shutdown channel:EMISSARY
 
 }
 
 func ExampleEmissary_Start() {
 	ch := make(chan struct{})
-	agent := newOpsAgent(Class, test.DefaultTracer, messaging.OutputErrorNotifier, test.Dispatcher)
+	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.Dispatcher)
 
 	go func() {
 		go emissaryAttend(agent, nil)
@@ -121,27 +120,6 @@ func ExampleEmissary_Start() {
 	//OnError() -> agency-ops : Invalid Argument [error: init officer is nil]
 	//OnTrace() -> agency-ops : initialize()
 	//OnMsg()   -> agency-ops : event:start-agents channel:EMISSARY
-	//OnMsg()   -> agency-ops : event:shutdown channel:EMISSARY
-
-}
-
-func _ExampleEmissary_EventError() {
-	ch := make(chan struct{})
-	agent := newOpsAgent(Class, test.DefaultTracer, messaging.OutputErrorNotifier, test.Dispatcher)
-
-	go func() {
-		go emissaryAttend(agent, nil)
-		agent.Message(messaging.NewControlMessage("", "", "event:invalid"))
-		agent.Message(shutdownMsg)
-		agent.IsFinalized()
-		ch <- struct{}{}
-	}()
-	<-ch
-	close(ch)
-
-	//Output:
-	//{ "timestamp":"2024-11-19T21:11:23.908Z", "code":3, "status":"Invalid Argument", "request-id":null, "errors" : [ "error: message event:event:invalid is invalid for agent:agency-ops" ], "trace" : [ "https://github.com/advanced-go/common/tree/main/messaging.(*outputError)#Notify","https://github.com/advanced-go/agency/tree/main/common#MessageEventErrorStatus" ] }
-	//OnError() -> agency-ops : Invalid Argument [error: message event:event:invalid is invalid for agent:agency-ops]
 	//OnMsg()   -> agency-ops : event:shutdown channel:EMISSARY
 
 }

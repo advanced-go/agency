@@ -1,7 +1,6 @@
 package ops
 
 import (
-	"errors"
 	"github.com/advanced-go/agency/common"
 	"github.com/advanced-go/common/core"
 	"github.com/advanced-go/common/messaging"
@@ -35,30 +34,9 @@ func emissaryAttend(agent *ops, initAgent initOfficer) {
 					agent.OnTrace(agent, "initialize()")
 				}
 			default:
-				agent.Notify(common.MessageEventErrorStatus(agent.agentId, msg))
+				agent.Notify(agent, common.MessageEventErrorStatus(agent.agentId, msg))
 			}
 		default:
 		}
-	}
-}
-
-func initialize(agent *ops, officer initOfficer) {
-	if officer == nil {
-		agent.Notify(core.NewStatusError(core.StatusInvalidArgument, errors.New("error: init officer is nil")))
-		return
-	}
-	a := officer(westOrigin, agent)
-	err := agent.caseOfficers.Register(a)
-	if err != nil {
-		agent.Notify(core.NewStatusError(core.StatusInvalidArgument, err))
-	} else {
-		a.Run()
-	}
-	a = officer(centralOrigin, agent)
-	err = agent.caseOfficers.Register(a)
-	if err != nil {
-		agent.Notify(core.NewStatusError(core.StatusInvalidArgument, err))
-	} else {
-		a.Run()
 	}
 }
