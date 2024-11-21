@@ -12,15 +12,17 @@ func newTestDispatcher() dispatcher {
 	return d
 }
 
+func (d *dispatchT) setup(_ *ops, _ string) {}
+
 func (d *dispatchT) dispatch(agent *ops, event string) {
 	switch event {
 	case stopAgentsEvent:
 		finalized := agent.caseOfficers.IsFinalized()
 		fmt.Printf("test: dispatch(%v) -> [finalized:%v] [count:%v]\n", event, finalized, agent.caseOfficers.Count())
 	case startAgentsEvent:
-		finalized := agent.caseOfficers.IsFinalized()
-		fmt.Printf("test: dispatch(%v) -> [finalized:%v] [count>0:%v\n", event, finalized, agent.caseOfficers.Count() > 0)
+		//finalized := agent.caseOfficers.IsFinalized()
+		fmt.Printf("test: dispatch(%v) -> [count>0:%v]\n", event, agent.caseOfficers.Count() > 0)
 	case messaging.DataChangeEvent:
-		opsAgent.Trace(agent, event, "Broadcast() -> calendar data change event")
+		agent.Trace(agent, event, "Broadcast() -> calendar data change event")
 	}
 }

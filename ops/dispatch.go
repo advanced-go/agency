@@ -1,6 +1,7 @@
 package ops
 
 type dispatcher interface {
+	setup(agent *ops, event string)
 	dispatch(agent *ops, event string)
 }
 
@@ -10,6 +11,8 @@ func newDispatcher() dispatcher {
 	d := new(dispatch)
 	return d
 }
+
+func (d *dispatch) setup(_ *ops, _ string) {}
 
 func (d *dispatch) dispatch(agent *ops, event string) {
 	switch event {

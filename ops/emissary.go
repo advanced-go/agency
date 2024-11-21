@@ -15,6 +15,7 @@ func emissaryAttend(agent *ops, initAgent initOfficer) {
 	for {
 		select {
 		case msg := <-agent.emissary.C:
+			agent.setup(msg.Event())
 			switch msg.Event() {
 			case messaging.ShutdownEvent:
 				agent.finalize()

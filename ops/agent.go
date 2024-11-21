@@ -108,6 +108,10 @@ func (o *ops) finalize() {
 	o.caseOfficers.Shutdown()
 }
 
+func (o *ops) setup(event string) {
+	o.sender.setup(o, event)
+}
+
 func (o *ops) dispatch(event string) {
 	o.sender.dispatch(o, event)
 }

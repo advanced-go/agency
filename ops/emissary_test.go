@@ -2,6 +2,7 @@ package ops
 
 import (
 	"fmt"
+	"github.com/advanced-go/common/core"
 	"github.com/advanced-go/common/messaging"
 	"github.com/advanced-go/common/test"
 	"github.com/advanced-go/resiliency/guidance"
@@ -18,108 +19,30 @@ func init() {
 	dataChangeMsg.SetContent(guidance.ContentTypeCalendar, guidance.NewProcessingCalendar())
 }
 
-func ExampleEmissary_Shutdown() {
-	ch := make(chan struct{})
-	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer, newTestDispatcher())
-
-	go func() {
-		go emissaryAttend(agent, nil)
-		agent.Message(shutdownMsg)
-		fmt.Printf("test: Shutdown() -> [finalized:%v]\n", agent.IsFinalized())
-		ch <- struct{}{}
-	}()
-	<-ch
-	close(ch)
-
-	//Output:
-	//OnMsg()   -> agency-ops : event:shutdown channel:EMISSARY
-	//test: Shutdown() -> [finalized:true]
-
+func officer(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent {
+	return test.NewAgent("officer:" + origin.Region)
 }
 
-func ExampleEmissary_Stop() {
+func ExampleEmissary() {
 	ch := make(chan struct{})
 	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer, newTestDispatcher())
 
 	go func() {
-		go emissaryAttend(agent, nil)
+		go emissaryAttend(agent, officer)
+		agent.Message(dataChangeMsg)
+		agent.Message(startMsg)
 		agent.Message(stopMsg)
 		agent.Message(shutdownMsg)
-		agent.IsFinalized()
+		fmt.Printf("test: emissaryAttend() -> [finalized:%v]\n", agent.IsFinalized())
 		ch <- struct{}{}
 	}()
 	<-ch
 	close(ch)
 
 	//Output:
-	//OnMsg()   -> agency-ops : event:stop-agents channel:EMISSARY
-	//OnTrace() -> agency-ops : officers.Shutdown()
-	//OnMsg()   -> agency-ops : event:shutdown channel:EMISSARY
-
-}
-
-func ExampleEmissary_DataChange() {
-	ch := make(chan struct{})
-	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer, newTestDispatcher())
-
-	go func() {
-		go emissaryAttend(agent, nil)
-		agent.Message(dataChangeMsg)
-		agent.Message(shutdownMsg)
-		agent.IsFinalized()
-		ch <- struct{}{}
-	}()
-	<-ch
-	close(ch)
-
-	//Output:
-	//OnMsg()   -> agency-ops : event:data-change channel:EMISSARY
-	//OnTrace() -> agency-ops : officers.Broadcast()
-	//OnMsg()   -> agency-ops : event:shutdown channel:EMISSARY
-
-}
-
-func ExampleEmissary_Start_Error() {
-	ch := make(chan struct{})
-	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer, newTestDispatcher())
-
-	go func() {
-		go emissaryAttend(agent, nil)
-		agent.Message(startMsg)
-		agent.Message(shutdownMsg)
-		agent.IsFinalized()
-		ch <- struct{}{}
-	}()
-	<-ch
-	close(ch)
-
-	//Output:
-	//OnMsg()   -> agency-ops : event:start-agents channel:EMISSARY
-	//{ "timestamp":"2024-11-19T21:36:19.968Z", "code":3, "status":"Invalid Argument", "request-id":null, "errors" : [ "error: init officer is nil" ], "trace" : [ "https://github.com/advanced-go/common/tree/main/messaging.(*outputError)#Notify","https://github.com/advanced-go/agency/tree/main/ops#initialize" ] }
-	//OnTrace() -> agency-ops : initialize()
-	//OnMsg()   -> agency-ops : event:shutdown channel:EMISSARY
-
-}
-
-func ExampleEmissary_Start() {
-	ch := make(chan struct{})
-	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer, newTestDispatcher())
-
-	go func() {
-		go emissaryAttend(agent, nil)
-		agent.Message(startMsg)
-		agent.Message(shutdownMsg)
-		agent.IsFinalized()
-		ch <- struct{}{}
-	}()
-	<-ch
-	close(ch)
-
-	//Output:
-	//{ "timestamp":"2024-11-19T21:36:19.968Z", "code":3, "status":"Invalid Argument", "request-id":null, "errors" : [ "error: init officer is nil" ], "trace" : [ "https://github.com/advanced-go/common/tree/main/messaging.(*outputError)#Notify","https://github.com/advanced-go/agency/tree/main/ops#initialize" ] }
-	//OnError() -> agency-ops : Invalid Argument [error: init officer is nil]
-	//OnTrace() -> agency-ops : initialize()
-	//OnMsg()   -> agency-ops : event:start-agents channel:EMISSARY
-	//OnMsg()   -> agency-ops : event:shutdown channel:EMISSARY
+	//test: Trace() -> agency-ops : event:data-change Broadcast() -> calendar data change event
+	//test: dispatch(event:start-agents) -> [count>0:true]
+	//test: dispatch(event:stop-agents) -> [finalized:true] [count:0]
+	//test: emissaryAttend() -> [finalized:true]
 
 }

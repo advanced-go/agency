@@ -16,12 +16,12 @@ func ExampleInitialize_Error() {
 
 	notifier.Reset()
 	initialize(agent, func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent {
-		return test.NewAgent("", nil)
+		return test.NewAgent("")
 	})
 	fmt.Printf("test: initialize() -> [status:%v]\n", notifier.Status())
 
 	notifier.Reset()
-	a := test.NewAgent("agent:test", nil)
+	a := test.NewAgent("agent:test")
 	err := agent.caseOfficers.Register(a)
 	if err != nil {
 		fmt.Printf("test: Register() -> [err:%v]\n", err)
