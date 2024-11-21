@@ -40,7 +40,7 @@ func ExampleEmissary() {
 	close(ch)
 
 	//Output:
-	//test: Trace() -> agency-ops : event:data-change Broadcast() -> calendar data change event
+	//test: Trace() -> agency-ops : emissary event:data-change Broadcast() -> calendar data change event
 	//test: dispatch(event:start-agents) -> [count>0:true]
 	//test: dispatch(event:stop-agents) -> [count:0]
 	//test: emissaryAttend() -> [finalized:true]

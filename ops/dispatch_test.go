@@ -21,7 +21,7 @@ func (d *dispatchT) dispatch(agent *ops, event string) {
 	case startAgentsEvent:
 		fmt.Printf("test: dispatch(%v) -> [count>0:%v]\n", event, agent.caseOfficers.Count() > 0)
 	case messaging.DataChangeEvent:
-		agent.Trace(agent, event, "Broadcast() -> calendar data change event")
+		agent.Trace(agent, messaging.EmissaryChannel, event, "Broadcast() -> calendar data change event")
 	}
 }
 

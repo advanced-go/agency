@@ -59,8 +59,8 @@ func (o *ops) Uri() string { return o.agentId }
 func (o *ops) Notify(status *core.Status) *core.Status { return o.notifier.Notify(status) }
 
 // Trace - activity tracing
-func (o *ops) Trace(agent messaging.Agent, event, activity string) {
-	o.tracer.Trace(agent, event, activity)
+func (o *ops) Trace(agent messaging.Agent, channel, event, activity string) {
+	o.tracer.Trace(agent, channel, event, activity)
 }
 
 // Message - message the agent
