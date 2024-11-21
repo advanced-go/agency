@@ -20,9 +20,16 @@ func (d *dispatchT) dispatch(agent *ops, event string) {
 		finalized := agent.caseOfficers.IsFinalized()
 		fmt.Printf("test: dispatch(%v) -> [finalized:%v] [count:%v]\n", event, finalized, agent.caseOfficers.Count())
 	case startAgentsEvent:
-		//finalized := agent.caseOfficers.IsFinalized()
 		fmt.Printf("test: dispatch(%v) -> [count>0:%v]\n", event, agent.caseOfficers.Count() > 0)
 	case messaging.DataChangeEvent:
 		agent.Trace(agent, event, "Broadcast() -> calendar data change event")
 	}
+}
+
+func ExampleTestDispatcher() {
+	fmt.Printf("test: TestDispatch() \n")
+
+	//Output:
+	//test: TestDispatch()
+
 }
