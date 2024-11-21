@@ -18,9 +18,7 @@ type ops struct {
 	caseOfficers *messaging.Exchange
 	notifier     messaging.Notifier
 	tracer       messaging.Tracer
-
 	sender       dispatcher
-	shutdownFunc func()
 }
 
 func cast(agent any) *ops {
@@ -73,9 +71,6 @@ func (o *ops) Message(m *messaging.Message) {
 	o.emissary.C <- m
 }
 
-// Add - add a shutdown function
-func (o *ops) Add(f func()) { o.shutdownFunc = messaging.AddShutdown(o.shutdownFunc, f) }
-
 // Run - run the agent
 func (o *ops) Run() {
 	if o.running {
@@ -91,9 +86,6 @@ func (o *ops) Shutdown() {
 		return
 	}
 	o.running = false
-	if o.shutdownFunc != nil {
-		o.shutdownFunc()
-	}
 	msg := messaging.NewControlMessage(o.Uri(), o.Uri(), messaging.ShutdownEvent)
 	o.emissary.Enable()
 	o.emissary.C <- msg

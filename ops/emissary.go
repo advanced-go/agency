@@ -11,7 +11,9 @@ type initOfficer func(origin core.Origin, handler messaging.OpsAgent) messaging.
 
 // emissary attention
 func emissaryAttend(agent *ops, initAgent initOfficer) {
-	agent.dispatch(messaging.StartupEvent)
+	// Agent is always running
+	//agent.dispatch(messaging.StartupEvent)
+	//agent.dispatch(msg.Event())
 	for {
 		select {
 		case msg := <-agent.emissary.C:
@@ -19,7 +21,6 @@ func emissaryAttend(agent *ops, initAgent initOfficer) {
 			switch msg.Event() {
 			case messaging.ShutdownEvent:
 				agent.finalize()
-				agent.dispatch(msg.Event())
 				return
 			case messaging.DataChangeEvent:
 				if msg.IsContentType(guidance.ContentTypeCalendar) {
