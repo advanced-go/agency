@@ -7,7 +7,7 @@ import (
 
 func initialize(agent *ops, newAgent newOfficerAgent) {
 	if newAgent == nil {
-		agent.Notify(core.NewStatusError(core.StatusInvalidArgument, errors.New("error: init officer is nil")))
+		agent.Notify(core.NewStatusError(core.StatusInvalidArgument, errors.New("error: initialize newAgent is nil")))
 		return
 	}
 	a := newAgent(westOrigin, agent)

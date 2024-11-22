@@ -32,7 +32,7 @@ func ExampleInitialize_Error() {
 	fmt.Printf("test: initialize() -> [status:%v]\n", notifier.Status())
 
 	//Output:
-	//test: initialize() -> [status:Invalid Argument [error: init officer is nil]]
+	//test: initialize() -> [status:Invalid Argument [error: initialize newAgent is nil]]
 	//test: initialize() -> [status:Invalid Argument [error: exchange.Register() agent Uri is empty]]
 	//test: initialize() -> [status:Invalid Argument [error: exchange.Register() agent already exists: [agent:test]]]
 
