@@ -11,11 +11,11 @@ func ExampleInitialize_Error() {
 	notifier := test.NewNotifier()
 	agent := newAgent(Class, notifier, test.DefaultTracer, nil)
 
-	createCaseOfficers(agent, nil)
+	createAssignments(agent, nil)
 	fmt.Printf("test: initialize() -> [status:%v]\n", notifier.Status())
 
 	notifier.Reset()
-	createCaseOfficers(agent, func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent {
+	createAssignments(agent, func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent {
 		return test.NewAgent("")
 	})
 	fmt.Printf("test: initialize() -> [status:%v]\n", notifier.Status())
@@ -26,7 +26,7 @@ func ExampleInitialize_Error() {
 	if err != nil {
 		fmt.Printf("test: Register() -> [err:%v]\n", err)
 	}
-	createCaseOfficers(agent, func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent {
+	createAssignments(agent, func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent {
 		return a
 	})
 	fmt.Printf("test: initialize() -> [status:%v]\n", notifier.Status())

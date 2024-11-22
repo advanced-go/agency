@@ -6,6 +6,11 @@ import (
 	"github.com/advanced-go/resiliency/guidance"
 )
 
+const (
+	startAgentsEvent = "event:start-agents"
+	stopAgentsEvent  = "event:stop-agents"
+)
+
 type newOfficerAgent func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent
 
 // emissary attention
@@ -31,7 +36,7 @@ func emissaryAttend(agent *ops, newAgent newOfficerAgent) {
 				agent.dispatch(msg.Event())
 			case startAgentsEvent:
 				if agent.caseOfficers.Count() == 0 {
-					createCaseOfficers(agent, newAgent)
+					createAssignments(agent, newAgent)
 					agent.dispatch(msg.Event())
 				}
 			default:
