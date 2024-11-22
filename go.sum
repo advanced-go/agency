@@ -2,8 +2,12 @@ github.com/advanced-go/agents v0.0.0-20241121195502-314c385d3934 h1:thvTrscZkwfR
 github.com/advanced-go/agents v0.0.0-20241121195502-314c385d3934/go.mod h1:vLif6+fEHH2dy9pJSquFxnbEcVOexFvsahJH9IVf8hk=
 github.com/advanced-go/agents v0.0.0-20241121200205-e278fde36584 h1:6Hrjsy4maNgMXFNbph78VshzeBh4xguNpAK4PneVGhg=
 github.com/advanced-go/agents v0.0.0-20241121200205-e278fde36584/go.mod h1:LyXv4JjlWuOBiLoOAlI4/U98pkurrVNPFQ5idYsH9/o=
+github.com/advanced-go/agents v0.0.0-20241122150845-08dc86ba097f h1:2Nd7mrCNWIHUyIQQg3z9YNNabno/zJK3aUagk7DELnw=
+github.com/advanced-go/agents v0.0.0-20241122150845-08dc86ba097f/go.mod h1:cXaFJXNXtVX6+F+fsBVypMWnxTeYUtDu6y29Dy0Wt6I=
 github.com/advanced-go/common v0.0.0-20241121195954-92ddd664a3d4 h1:7D3lQ37ab82u/gMzktPfhuLANLFks4JSAzmcux9xs8w=
 github.com/advanced-go/common v0.0.0-20241121195954-92ddd664a3d4/go.mod h1:ZO9q9c1GB9gQOeuWiAk0fT7pH8nfmNarGHi/Qu4LP/Q=
+github.com/advanced-go/common v0.0.0-20241122150826-28fa834ac61c h1:HSAO0TUoORENv2dQ8je4PtLRn8K0s44M4iSVin6oQIw=
+github.com/advanced-go/common v0.0.0-20241122150826-28fa834ac61c/go.mod h1:ZO9q9c1GB9gQOeuWiAk0fT7pH8nfmNarGHi/Qu4LP/Q=
 github.com/advanced-go/log v0.0.0-20241116131819-5edd79a504a1 h1:d3AkR75C1KBrKKYbTvYC0IOZ1RnsytNbP7yuFj2r6ig=
 github.com/advanced-go/log v0.0.0-20241116131819-5edd79a504a1/go.mod h1:5Xg63AfI0Qe4fdvgvcilsmyfPoqz2d6ygiNrrFGFYjM=
 github.com/advanced-go/resiliency v0.0.0-20241120190718-9188cad85667 h1:a2q7bggh/N9BtRYtQuwoEj/zJJqQr+KUapZ07y/ogg4=

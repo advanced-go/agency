@@ -1,7 +1,6 @@
 package ops
 
 import (
-	"github.com/advanced-go/agency/common"
 	"github.com/advanced-go/common/core"
 	"github.com/advanced-go/common/messaging"
 	"github.com/advanced-go/resiliency/guidance"
@@ -32,11 +31,11 @@ func emissaryAttend(agent *ops, newAgent newOfficerAgent) {
 				agent.dispatch(msg.Event())
 			case startAgentsEvent:
 				if agent.caseOfficers.Count() == 0 {
-					initialize(agent, newAgent)
+					createCaseOfficers(agent, newAgent)
 					agent.dispatch(msg.Event())
 				}
 			default:
-				agent.Notify(common.MessageEventErrorStatus(agent.agentId, msg))
+				agent.Notify(messaging.EventErrorStatus(agent.agentId, msg))
 			}
 		default:
 		}
