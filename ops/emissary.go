@@ -7,10 +7,10 @@ import (
 	"github.com/advanced-go/resiliency/guidance"
 )
 
-type initOfficer func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent
+type newOfficerAgent func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent
 
 // emissary attention
-func emissaryAttend(agent *ops, initAgent initOfficer) {
+func emissaryAttend(agent *ops, newAgent newOfficerAgent) {
 	// Agent is always running
 	//agent.dispatch(messaging.StartupEvent)
 	//agent.dispatch(msg.Event())
@@ -32,7 +32,7 @@ func emissaryAttend(agent *ops, initAgent initOfficer) {
 				agent.dispatch(msg.Event())
 			case startAgentsEvent:
 				if agent.caseOfficers.Count() == 0 {
-					initialize(agent, initAgent)
+					initialize(agent, newAgent)
 					agent.dispatch(msg.Event())
 				}
 			default:

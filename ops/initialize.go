@@ -5,19 +5,19 @@ import (
 	"github.com/advanced-go/common/core"
 )
 
-func initialize(agent *ops, officer initOfficer) {
-	if officer == nil {
+func initialize(agent *ops, newAgent newOfficerAgent) {
+	if newAgent == nil {
 		agent.Notify(core.NewStatusError(core.StatusInvalidArgument, errors.New("error: init officer is nil")))
 		return
 	}
-	a := officer(westOrigin, agent)
+	a := newAgent(westOrigin, agent)
 	err := agent.caseOfficers.Register(a)
 	if err != nil {
 		agent.Notify(core.NewStatusError(core.StatusInvalidArgument, err))
 	} else {
 		a.Run()
 	}
-	a = officer(centralOrigin, agent)
+	a = newAgent(centralOrigin, agent)
 	err = agent.caseOfficers.Register(a)
 	if err != nil {
 		agent.Notify(core.NewStatusError(core.StatusInvalidArgument, err))

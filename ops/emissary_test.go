@@ -25,7 +25,7 @@ func officer(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent 
 
 func ExampleEmissary() {
 	ch := make(chan struct{})
-	agent := newOpsAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer, newTestDispatcher())
+	agent := newAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer, newTestDispatcher())
 
 	go func() {
 		go emissaryAttend(agent, officer)

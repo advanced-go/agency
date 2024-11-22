@@ -35,10 +35,10 @@ func init() {
 
 // NewAgent - create a new ops agent
 func NewAgent() messaging.OpsAgent {
-	return newOpsAgent(Class, messaging.LogErrorNotifier, messaging.DefaultTracer, newDispatcher())
+	return newAgent(Class, messaging.LogErrorNotifier, messaging.DefaultTracer, newDispatcher())
 }
 
-func newOpsAgent(agentId string, notifier messaging.Notifier, tracer messaging.Tracer, sender dispatcher) *ops {
+func newAgent(agentId string, notifier messaging.Notifier, tracer messaging.Tracer, sender dispatcher) *ops {
 	r := new(ops)
 	r.agentId = agentId
 	r.caseOfficers = messaging.NewExchange()
