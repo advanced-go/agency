@@ -18,6 +18,7 @@ type ops struct {
 	caseOfficers *messaging.Exchange
 	notifier     messaging.Notifier
 	tracer       messaging.Tracer
+	dispatcher   messaging.TraceDispatcher
 	sender       dispatcher
 }
 
@@ -35,10 +36,10 @@ func init() {
 
 // NewAgent - create a new ops agent
 func NewAgent() messaging.OpsAgent {
-	return newAgent(Class, messaging.LogErrorNotifier, messaging.DefaultTracer, newDispatcher())
+	return newAgent(Class, messaging.LogErrorNotifier, messaging.DefaultTracer, nil, newDispatcher())
 }
 
-func newAgent(agentId string, notifier messaging.Notifier, tracer messaging.Tracer, sender dispatcher) *ops {
+func newAgent(agentId string, notifier messaging.Notifier, tracer messaging.Tracer, dispatcher messaging.TraceDispatcher, sender dispatcher) *ops {
 	r := new(ops)
 	r.agentId = agentId
 	r.caseOfficers = messaging.NewExchange()
@@ -46,6 +47,7 @@ func newAgent(agentId string, notifier messaging.Notifier, tracer messaging.Trac
 	r.notifier = notifier
 	r.tracer = tracer
 	r.sender = sender
+	r.dispatcher = dispatcher
 	return r
 }
 
@@ -101,9 +103,15 @@ func (o *ops) finalize() {
 }
 
 func (o *ops) setup(event string) {
-	o.sender.setup(o, event)
+	if o.dispatcher == nil {
+		o.sender.setup(o, event)
+	}
 }
 
 func (o *ops) dispatch(event string) {
+	if o.dispatcher != nil {
+		o.dispatcher.Trace(o, messaging.EmissaryChannel, event, "")
+		return
+	}
 	o.sender.dispatch(o, event)
 }

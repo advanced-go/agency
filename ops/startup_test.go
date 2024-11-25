@@ -10,6 +10,6 @@ func ExampleStartupPing() {
 	fmt.Printf("test: Ping() -> [status:%v]\n", status)
 
 	//Output:
-	//agency-ops : event:startup startuptest: Ping() -> [status:OK]
+	//test: Ping() -> [status:OK]
 
 }

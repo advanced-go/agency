@@ -11,7 +11,7 @@ const (
 	stopAgentsEvent  = "event:stop-agents"
 )
 
-type newOfficerAgent func(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent
+type newOfficerAgent func(origin core.Origin, handler messaging.OpsAgent, dispatcher messaging.TraceDispatcher) messaging.OpsAgent
 
 // emissary attention
 func emissaryAttend(agent *ops, newAgent newOfficerAgent) {

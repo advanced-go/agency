@@ -19,13 +19,14 @@ func init() {
 	dataChangeMsg.SetContent(guidance.ContentTypeCalendar, guidance.NewProcessingCalendar())
 }
 
-func officer(origin core.Origin, handler messaging.OpsAgent) messaging.OpsAgent {
+func officer(origin core.Origin, handler messaging.OpsAgent, dispatcher messaging.TraceDispatcher) messaging.OpsAgent {
 	return test.NewAgent("officer:" + origin.Region)
 }
 
 func ExampleEmissary() {
 	ch := make(chan struct{})
-	agent := newAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer, newTestDispatcher())
+	traceDispatcher := messaging.NewTraceDispatcher(nil, "")
+	agent := newAgent(Class, messaging.OutputErrorNotifier, test.DefaultTracer, traceDispatcher, newTestDispatcher())
 
 	go func() {
 		go emissaryAttend(agent, officer)
